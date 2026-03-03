@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: wahid-backend
+    runtime: python
+    repo: https://github.com/akilitigui/WAHID-Platform
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://user:pass@localhost:5432/wahid_db  # à remplacer plus tard
