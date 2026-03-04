@@ -9,5 +9,34 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      # Base de données (déjà présente, on garde la valeur actuelle)
       - key: DATABASE_URL
-        value: postgresql://user:pass@localhost:5432/wahid_db  # à remplacer plus tard
+        sync: false
+
+      # 🔐 Sécurité
+      - key: SECRET_KEY
+        value: "changez-moi-par-une-cle-tres-forte-et-longue"
+      - key: ENVIRONMENT
+        value: "production"
+
+      # ☁️ Cloudinary (médias)
+      - key: CLOUDINARY_URL
+        value: "cloudinary://[votre-clé-api]:[votre-secret]@[cloud-name]"
+
+      # 📧 Sentry (monitoring)
+      - key: SENTRY_DSN
+        value: "https://[votre-clé-publique]@[votre-organisation].ingest.sentry.io/[projet-id]"
+
+      # 🗺️ Mapbox (géolocalisation)
+      - key: MAPBOX_TOKEN
+        value: "pk.eyJ1Ijoi..."
+
+      # 💳 CinetPay (paiements)
+      - key: CINETPAY_API_KEY
+        value: "[votre-clé-api-cinetpay]"
+      - key: CINETPAY_SITE_ID
+        value: "[votre-site-id]"
+
+      # 📱 Autres services (optionnel)
+      - key: TELNYX_API_KEY
+        value: "[votre-clé-telnyx]"
