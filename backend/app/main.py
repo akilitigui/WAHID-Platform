@@ -1,3 +1,17 @@
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    integrations=[
+        FastApiIntegration(),
+        SqlalchemyIntegration(),
+    ],
+    traces_sample_rate=1.0,  # Ajustez en production (ex: 0.1)
+)
+
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
