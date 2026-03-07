@@ -1,4 +1,5 @@
 import sentry_sdk
+import os
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
