@@ -1,27 +1,49 @@
+"""
+WAHID Platform - Security Module (Version MVP Simplifiée)
+"""
+
 from passlib.context import CryptContext
+from jose import jwt
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
-import os
+from typing import Optional, Dict, Any
 
 # Configuration
-SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
+SECRET_KEY = "temporary-secret-key-change-in-production"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Password hashing avec Argon2
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password):
+def hash_password(password: str) -> str:
+    """Hash un password avec Argon2"""
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: timedelta = None):
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Vérifie un password"""
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+    """Crée un JWT access token"""
     to_encode = data.copy()
+    
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+        expire = datetime.utcnow() + timedelta(minutes=30)
+    
+    to_encode.update({"exp": expire, "iat": datetime.utcnow()})
+    
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+def decode_token(token: str) -> Optional[Dict[str, Any]]:
+    """Décode un JWT token"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except:
+        return None
