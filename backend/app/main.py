@@ -1,5 +1,15 @@
 import sentry_sdk
 import os
+
+from app.identity.router import router as identity_router
+
+# Include routers
+app.include_router(
+    identity_router,
+    prefix="/api/v1/identity",
+    tags=["Identity"]
+)
+
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
