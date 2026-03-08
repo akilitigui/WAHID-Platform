@@ -60,6 +60,32 @@ from app.api import auth
 
 app.include_router(auth.router)
 
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Gère le cycle de vie"""
+    # ===== STARTUP =====
+    logger.info("🚀 Starting WAHID Platform")
+    
+    # Créer tables automatiquement
+    from app.core.database import create_tables
+    await create_tables()
+    logger.info("✅ Database ready")
+    
+    yield
+    
+    # ===== SHUTDOWN =====
+    from app.core.database import engine
+    await engine.dispose()
+    logger.info("👋 Shutdown complete")
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
