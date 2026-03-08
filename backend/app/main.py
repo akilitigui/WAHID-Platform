@@ -21,7 +21,8 @@ app = FastAPI(
     description="API principale de la plateforme WAHID - Module Transport",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc,
+lifespan=lifespan"
 )
 
 # Configuration CORS
